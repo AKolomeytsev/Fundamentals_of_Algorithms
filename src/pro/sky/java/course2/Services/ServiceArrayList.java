@@ -10,20 +10,20 @@ import java.util.Arrays;
 
 public class ServiceArrayList implements ICustomArrayList {
 
-    static String[] customArrayList;
+    static int[] customArrayList;
 
     public ServiceArrayList(int len) {
-        this.customArrayList = new String[len];
+        this.customArrayList = new int[len];
     }
 
     @Override
-    public String add(String item) {
-        if(item!=null && !item.isEmpty()) {
-            int oldLen = customArrayList.length;
+    public int add(int item) {
+        //if(item!=null) {
+            //int oldLen = customArrayList.length;
             int newIndex = changeDimension();
-            if (newIndex > oldLen) {
+            //if (newIndex > oldLen) {
                 customArrayList[newIndex - 1] = item;
-            } else {
+            /*} else {
                 for (int i = 0; i < customArrayList.length; i++) {
                     if (customArrayList[i] == null) {
                         customArrayList[i] = item;
@@ -33,24 +33,21 @@ public class ServiceArrayList implements ICustomArrayList {
             }
         }else{
             throw new ArrayElementCannotBeNullException();
-        }
+        }*/
 
         return item;
     }
 
     @Override
-    public String add(int index, String item) {
-        String[] lefArray = new String[0];
-        String[] rightArray = new String[0];
+    public int add(int index, int item) {
+        int[] lefArray = new int[0];
+        int[] rightArray = new int[0];
         if(index>=0) {
-            if(item!=null && !item.isEmpty()) {
+            //if(item!=null && !item.isEmpty()) {
                 if (index < customArrayList.length) {
-                    if (customArrayList[index] == null) {
-                        customArrayList[index] = item;
-                    } else {
                         if (index == 0) {
                             rightArray = Arrays.copyOf(copyArray(0, customArrayList.length), customArrayList.length);
-                            customArrayList = new String[1];
+                            customArrayList = new int[1];
                             customArrayList[0] = item;
                             for (int i = 0; i < rightArray.length; i++) {
                                 changeDimension();
@@ -70,7 +67,6 @@ public class ServiceArrayList implements ICustomArrayList {
                                 }
                             }
                         }
-                    }
                 } else {
                     if (index > customArrayList.length) {
                         throw new IndexesAreIncorrectException();
@@ -81,9 +77,9 @@ public class ServiceArrayList implements ICustomArrayList {
                         customArrayList[index] = item;
                     }
                 }
-            }else {
-                throw new ArrayElementCannotBeNullException();
-            }
+            //}else {
+            //    throw new ArrayElementCannotBeNullException();
+            //}
         }else{
             throw new IndexesAreIncorrectException();
         }
@@ -91,13 +87,13 @@ public class ServiceArrayList implements ICustomArrayList {
     }
 
     @Override
-    public String set(int index, String item) {
+    public int set(int index, int item) {
         if(index>0 && index<customArrayList.length){
-            if(item!=null  && !item.isEmpty()){
+            //if(item!=null  && !item.isEmpty()){
                 customArrayList[index] = item;
-            }else {
-                throw new ArrayElementCannotBeNullException();
-            }
+            //}else {
+            //    throw new ArrayElementCannotBeNullException();
+            //}
         }else{
             throw new IndexesAreIncorrectException();
         }
@@ -105,11 +101,11 @@ public class ServiceArrayList implements ICustomArrayList {
     }
 
     @Override
-    public String remove(String item) {
-        int index = indexOf(item);
+    public int removeItem(int item) {
+        int index = indexOf((int) item);
         if(index!=-1){
-            String[] lefArray = new String[0];
-            String[] rightArray = new String[0];
+            int[] lefArray = new int[0];
+            int[] rightArray = new int[0];
             if(index == 0){
                 rightArray = Arrays.copyOf(copyArray(1, customArrayList.length), customArrayList.length-1);
                 customArrayList = Arrays.copyOf(rightArray, rightArray.length);
@@ -118,13 +114,15 @@ public class ServiceArrayList implements ICustomArrayList {
                 customArrayList = Arrays.copyOf(lefArray, lefArray.length);
             }else{
                 lefArray = Arrays.copyOf(copyArray(0, index), index);
-                rightArray = Arrays.copyOf(copyArray(index+1, customArrayList.length), customArrayList.length - index);
-                customArrayList = new String[(lefArray.length+rightArray.length)-1];
+                rightArray = Arrays.copyOf(copyArray(index+1, customArrayList.length), customArrayList.length - (index+1));
+                customArrayList = new int[(lefArray.length+rightArray.length)];
+                int j =0;
                 for (int i = 0; i < customArrayList.length; i++) {
                     if (i < index) {
                         customArrayList[i] = lefArray[i];
                     } else {
-                        customArrayList[i] = rightArray[i-2];
+                        customArrayList[i] = rightArray[j];
+                        j++;
                     }
                 }
             }
@@ -135,12 +133,12 @@ public class ServiceArrayList implements ICustomArrayList {
     }
 
     @Override
-    public String remove(int index) {
-        String item = "";
+    public int remove(int index) {
+        int item = 0;
         if(index!=-1 && index<customArrayList.length){
             item = customArrayList[index];
-            String[] lefArray = new String[0];
-            String[] rightArray = new String[0];
+            int[] lefArray = new int[0];
+            int[] rightArray = new int[0];
             if(index == 0){
                 rightArray = Arrays.copyOf(copyArray(1, customArrayList.length), customArrayList.length-1);
                 customArrayList = Arrays.copyOf(rightArray, rightArray.length);
@@ -150,7 +148,7 @@ public class ServiceArrayList implements ICustomArrayList {
             }else{
                 lefArray = Arrays.copyOf(copyArray(0, index), index);
                 rightArray = Arrays.copyOf(copyArray(index+1, customArrayList.length), customArrayList.length - index);
-                customArrayList = new String[(lefArray.length+rightArray.length)-1];
+                customArrayList = new int[(lefArray.length+rightArray.length)-1];
                 for (int i = 0; i < customArrayList.length; i++) {
                     if (i < index) {
                         customArrayList[i] = lefArray[i];
@@ -165,21 +163,56 @@ public class ServiceArrayList implements ICustomArrayList {
         return item;
     }
 
-    @Override
-    public boolean contains(String item) {
+
+    private boolean containsLinear(int item) {
         boolean flag = false;
         for (int i=0;i<customArrayList.length;i++){
-            if(customArrayList[i].equals(item))
+            if(customArrayList[i] == item )
                 flag = true;
         }
         return flag;
     }
 
+    private boolean containsBinary(int item) {
+        sort("sortInsertion");
+        int min = 0;
+        int max = customArrayList.length - 1;
+
+        while (min <= max) {
+            int mid = (min + max) / 2;
+
+            if (item == customArrayList[mid]) {
+                return true;
+            }
+
+            if (item < customArrayList[mid]) {
+                max = mid - 1;
+            } else {
+                min = mid + 1;
+            }
+        }
+        return false;
+    }
+
     @Override
-    public int indexOf(String item) {
+    public boolean contains(String method,int item){
+        boolean flag = false;
+        switch (method){
+            case "containsLinear":
+                flag = containsLinear(item);
+                break;
+            case "containsBinary":
+                flag = containsBinary(item);
+                break;
+        }
+        return flag;
+    }
+
+    @Override
+    public int indexOf(int item) {
         int index = -1;
         for (int i=0;i< customArrayList.length;i++){
-            if(customArrayList[i].equals(item)){
+            if(customArrayList[i] == item){
                 index = i;
                 break;
             }
@@ -188,10 +221,10 @@ public class ServiceArrayList implements ICustomArrayList {
     }
 
     @Override
-    public int lastIndexOf(String item) {
+    public int lastIndexOf(int item) {
         int index = -1;
         for (int i=customArrayList.length-1;i>=0;i--){
-            if(customArrayList[i].equals(item)){
+            if(customArrayList[i]==item){
                 index = i;
                 break;
             }
@@ -200,8 +233,8 @@ public class ServiceArrayList implements ICustomArrayList {
     }
 
     @Override
-    public String get(int index) {
-        String item = "";
+    public int get(int index) {
+        int item = 0;
         if(index>-1 && index<customArrayList.length){
             item = customArrayList[index];
         }else{
@@ -211,12 +244,12 @@ public class ServiceArrayList implements ICustomArrayList {
     }
 
     @Override
-    public boolean equals(String[] otherList) {
+    public boolean equals(int[] otherList) {
         boolean flag = true;
         if(otherList!=null) {
             if (customArrayList.length == otherList.length) {
                 for (int i = 0; i < customArrayList.length; i++) {
-                    if (customArrayList[i].equals(otherList[i]) == false)
+                    if (customArrayList[i]!=otherList[i])
                         flag = false;
                 }
             } else {
@@ -230,12 +263,7 @@ public class ServiceArrayList implements ICustomArrayList {
 
     @Override
     public int size() {
-        int cnt = 0;
-        for (int i=0;i<customArrayList.length;i++){
-            if(customArrayList[i]!=null)
-                cnt++;
-        }
-        return cnt;
+        return customArrayList.length;
     }
 
     @Override
@@ -245,28 +273,85 @@ public class ServiceArrayList implements ICustomArrayList {
 
     @Override
     public void clear() {
-        customArrayList = new String[0];
+        customArrayList = new int[0];
     }
 
-    public String[] toArray() {
-        String[] newArray = new String[customArrayList.length];
+    public int[] toArray() {
+        int[] newArray = new int[customArrayList.length];
         for (int i = 0;i<customArrayList.length;i++){
             newArray[i] = customArrayList[i];
         }
         return newArray;
     }
 
+
+    private void sortBubble(int[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = 0; j < arr.length - 1 - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    swapElements(arr, j, j + 1);
+                }
+            }
+        }
+    }
+
+    private void sortSelection(int[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            int minElementIndex = i;
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[j] < arr[minElementIndex]) {
+                    minElementIndex = j;
+                }
+            }
+            swapElements(arr, i, minElementIndex);
+        }
+    }
+
+    private void sortInsertion(int[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            int temp = arr[i];
+            int j = i;
+            while (j > 0 && arr[j - 1] >= temp) {
+                arr[j] = arr[j - 1];
+                j--;
+            }
+            arr[j] = temp;
+        }
+    }
+
+    @Override
+    public void sort(String method){
+        switch (method){
+            case "sortBubble":
+                sortBubble(customArrayList);
+                break;
+            case "sortSelection":
+                sortSelection(customArrayList);
+                break;
+            default:
+                sortInsertion(customArrayList);
+        }
+    }
+
+    private void swapElements(int[] arr, int j, int i) {
+        arr[j] = arr[j]+arr[i];
+        arr[i] = arr[j]-arr[i];
+        arr[j] = arr[j]-arr[i];
+    }
+
     private int changeDimension(){
-        if(customArrayList.length == size()){
-            String [] tempArray = copyArray(0,customArrayList.length);
-            customArrayList = new String[0];
+        if(customArrayList.length == size() && size()!=0){
+            int[] tempArray = copyArray(0,customArrayList.length);
+            customArrayList = new int[0];
             customArrayList = Arrays.copyOf(tempArray,tempArray.length+1);
+        }else{
+            customArrayList = new int[1];
         }
         return customArrayList.length;
     }
 
-    private String[] copyArray(int firstIndex,int lastIndex){
-        String[] newArray = new String[lastIndex - firstIndex];
+    private int[] copyArray(int firstIndex,int lastIndex){
+        int[] newArray = new int[lastIndex - firstIndex];
         int newIndex = 0;
         if (firstIndex<lastIndex) {
             for (int i = firstIndex;i<lastIndex;i++){
@@ -282,5 +367,15 @@ public class ServiceArrayList implements ICustomArrayList {
     public void printCustomList(){
 
         System.out.println(Arrays.toString(customArrayList));
+    }
+
+    public void generateRandomArray() {
+        java.util.Random random = new java.util.Random();
+        clear();
+        int[] arr = new int[1300];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = random.nextInt(100_000) + 100_000;
+        }
+        customArrayList = Arrays.copyOf(arr,arr.length);
     }
 }
