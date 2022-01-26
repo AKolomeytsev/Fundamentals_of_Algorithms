@@ -96,9 +96,14 @@ public class Main {
         System.out.println(Arrays.toString(myArrayList.toArray()));
         System.out.println(System.currentTimeMillis() - start);
 
+        myArrayList.generateRandomArray();
         System.out.println(myArrayList.contains("containsBinary",125233));
+
+        myArrayList.generateRandomArray();
         myArrayList.set(1,555);
         System.out.println(myArrayList.contains("containsBinary",555));
+
+
 
     }
 }

@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public class ServiceArrayList implements ICustomArrayList {
 
-    static int[] customArrayList;
+    private int[] customArrayList;
 
     public ServiceArrayList(int len) {
         this.customArrayList = new int[len];
