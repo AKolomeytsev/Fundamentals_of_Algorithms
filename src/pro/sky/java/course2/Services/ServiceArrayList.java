@@ -174,7 +174,6 @@ public class ServiceArrayList implements ICustomArrayList {
     }
 
     private boolean containsBinary(int item) {
-        sort("sortInsertion");
         int min = 0;
         int max = customArrayList.length - 1;
 
@@ -202,6 +201,7 @@ public class ServiceArrayList implements ICustomArrayList {
                 flag = containsLinear(item);
                 break;
             case "containsBinary":
+                sort("sortInsertion");
                 flag = containsBinary(item);
                 break;
         }
